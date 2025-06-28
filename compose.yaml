@@ -1,0 +1,44 @@
+services:
+  frontend:
+    build:
+      context: ./FrontEnd
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    env_file:
+      - ./FrontEnd/.env
+    networks:
+      - mynetwork
+
+  backend:
+    build:
+      context: ./BackEnd
+      dockerfile: Dockerfile
+    depends_on:
+      - mongodb
+    env_file:
+      - ./BackEnd/config.env
+    ports:
+      - "5000:5000"
+    networks:
+      - mynetwork
+
+  mongodb:
+    image: mongo:4.4
+    command: [--bind_ip_all]  # Allow connections from any IP
+    volumes:
+      - mongo-data:/data/db
+    # Health check to ensure proper startup
+    healthcheck:
+      test: mongo --eval "db.adminCommand('ping')"
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - mynetwork
+
+volumes:
+  mongo-data:
+
+networks:
+  mynetwork:
