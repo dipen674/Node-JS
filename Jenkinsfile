@@ -17,8 +17,8 @@ pipeline {
             agent {label "production"}
             steps {
                 echo "Building docker images'"
-                sh "docker image build -t ${mydockerimage}:frontend_${BUILD_NUMBER} ./FrontEnd"
-                sh "docker image build -t ${mydockerimage}:backend_${BUILD_NUMBER} ./BackEnd"
+                sh "docker image build -t --no-cache ${mydockerimage}:frontend_${BUILD_NUMBER} ./FrontEnd"
+                sh "docker image build -t --no-cache ${mydockerimage}:backend_${BUILD_NUMBER} ./BackEnd"
             }
         }
          stage('Image scanning with trivy') {
