@@ -29,7 +29,7 @@ pipeline {
                 withDockerRegistry ([credentialsId: 'jenkinsdockercred', url: '']) {
                     sh '''
                     docker push ${mydockerimage}:frontend_${BUILD_NUMBER}
-                    docker push $${mydockerimage}:backend_${BUILD_NUMBER}
+                    docker push ${mydockerimage}:backend_${BUILD_NUMBER}
                     '''
                 }
             }
