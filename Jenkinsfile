@@ -10,14 +10,16 @@ pipeline {
             agent {label "production"}
             steps {
                 echo "Building docker images'"
-                sh 'docker image build -t ${mydockerimage}:${BUILD_NUMBER} .'
+                sh "docker image build -t ${mydockerimage}:frontend_${BUILD_NUMBER} ./FrontEnd"
+                sh "docker image build -t ${mydockerimage}:backend_${BUILD_NUMBER} ./BackEnd"
             }
         }
          stage('Image scanning with trivy') {
             agent {label "production"}
             steps {
                 echo "Scanning image vulneriblity"
-                sh 'trivy image ${mydockerimage}:${BUILD_NUMBER}'
+                sh "trivy image ${mydockerimage}:frontend_${BUILD_NUMBER} > trivy_frontend_report.txt"
+                sh "trivy image ${mydockerimage}:frontend_${BUILD_NUMBER} > trivy_backend_report.txt"
         }
         }
     //      stage('Pushing docker image to dockerhub') {
