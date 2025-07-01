@@ -6,6 +6,13 @@ pipeline {
     }
 
     stages {
+        stage('Write Frontend .env') {
+            agent { label 'production' }
+            steps {
+                writeFile file: './FrontEnd/.env', text: "REACT_APP_API_URL=192.168.1.77:5000"
+                sh "cat ./FrontEnd/.env"
+            }
+        }
          stage('Build docker image') {
             agent {label "production"}
             steps {
@@ -52,7 +59,7 @@ BACKEND_IMAGE=${mydockerimage}:backend_${BUILD_NUMBER}
                 writeFile file: './FrontEnd/.env', text: "REACT_APP_API_URL=192.168.1.77:5000"
                 sh "cat ./FrontEnd/.env"
             }
-}
+        }
         stage('Deploy to devenv ') {
             agent {label "deployment"}
             steps {
