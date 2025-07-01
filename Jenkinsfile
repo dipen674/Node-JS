@@ -6,7 +6,7 @@ pipeline {
     }
 
     stages {
-        stage('Write Frontend .env') {
+        stage('Write Frontend .env in production environment') {
             agent { label 'production' }
             steps {
                 writeFile file: './FrontEnd/.env', text: "REACT_APP_API_URL=192.168.1.77:5000"
