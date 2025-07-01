@@ -9,7 +9,7 @@ services:
       - mynetwork
 
   backend:
-    build: "${BACKEND_IMAGE}"
+    image: $"{BACKEND_IMAGE}"
       
     depends_on:
       - mongodb
