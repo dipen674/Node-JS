@@ -34,18 +34,29 @@ pipeline {
                 }
             }
         }
-    //     stage('Deploy to devenv ') {
-    //         agent {label "deployment"}
-    //         steps {
-    //             echo 'Running a Development environment'
-    //             sh '''
-    //             docker container stop myapp || true
-    //             docker container rm myapp || true
-    //             docker image rm ${mydockerimage}:${BUILD_NUMBER} || true
-    //             docker run -d --name myapp -p 8089:8080 ${mydockerimage}:${BUILD_NUMBER}
-    //             '''
-    //         }
-    //     }
+        stage('Preparing compose.env file for docker-compose.yaml ') {
+            agent {label "deployment"}
+            steps {
+                script {
+            writeFile file: 'compose.env', text: """
+            FRONTEND_IMAGE=${mydockerimage}:frontend_${BUILD_NUMBER}
+            BACKEND_IMAGE=${mydockerimage}:backend_${BUILD_NUMBER}
+            """
+            sh "ls -l"
+        }
+    }
+}
+        stage('Deploy to devenv ') {
+            agent {label "deployment"}
+            steps {
+                echo 'Running a Development environment'
+                sh '''
+                docker compose --env-file compose.env down || true
+                docker compose --env-file compose.env pull
+                docker compose --env-file compose.env up -d
+                '''
+            }
+        }
     //     stage('Deploy Production Environment') {
     //         agent {label "deployment"}
     //         steps {

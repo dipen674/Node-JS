@@ -1,8 +1,6 @@
 services:
   frontend:
-    build:
-      context: ./FrontEnd
-      dockerfile: Dockerfile
+    image: "${FRONTEND_IMAGE}"
     ports:
       - "3000:80"
     env_file:
@@ -11,9 +9,8 @@ services:
       - mynetwork
 
   backend:
-    build:
-      context: ./BackEnd
-      dockerfile: Dockerfile
+    build: "${BACKEND_IMAGE}"
+      
     depends_on:
       - mongodb
     env_file:
