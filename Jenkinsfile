@@ -19,7 +19,7 @@ pipeline {
             steps {
                 echo "Scanning image vulneriblity"
                 sh "trivy image ${mydockerimage}:frontend_${BUILD_NUMBER} > trivy_frontend_report.txt"
-                sh "trivy image ${mydockerimage}:backend${BUILD_NUMBER} > trivy_backend_report.txt"
+                sh "trivy image ${mydockerimage}:backend_${BUILD_NUMBER} > trivy_backend_report.txt"
         }
         }
          stage('Pushing docker image to dockerhub') {
@@ -29,7 +29,7 @@ pipeline {
                 withDockerRegistry ([credentialsId: 'jenkinsdockercred', url: '']) {
                     sh '''
                     docker push ${mydockerimage}:frontend_${BUILD_NUMBER}
-                    docker push ${mydockerimage}:frontend_${BUILD_NUMBER}
+                    docker push $${mydockerimage}:backend_${BUILD_NUMBER}
                     '''
                 }
             }
