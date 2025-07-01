@@ -22,17 +22,18 @@ pipeline {
                 sh "trivy image ${mydockerimage}:frontend_${BUILD_NUMBER} > trivy_backend_report.txt"
         }
         }
-    //      stage('Pushing docker image to dockerhub') {
-    //         agent {label "production"}
-    //         steps {
-    //             echo "pushing image"
-    //             withDockerRegistry ([credentialsId: 'jenkinsdockercred', url: '']) {
-    //                 sh '''
-    //                 docker push $mydockerimage:$BUILD_NUMBER
-    //                 '''
-    //             }
-    //         }
-    //     }
+         stage('Pushing docker image to dockerhub') {
+            agent {label "production"}
+            steps {
+                echo "pushing image to docker hub registry"
+                withDockerRegistry ([credentialsId: 'jenkinsdockercred', url: '']) {
+                    sh '''
+                    docker push ${mydockerimage}:frontend_${BUILD_NUMBER}
+                    docker push ${mydockerimage}:frontend_${BUILD_NUMBER}
+                    '''
+                }
+            }
+        }
     //     stage('Deploy to devenv ') {
     //         agent {label "deployment"}
     //         steps {

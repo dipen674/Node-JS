@@ -144,7 +144,9 @@ This project is licensed under the [MIT License](LICENSE). See the [LICENSE](LIC
 We greatly appreciate all contributions to this project. Contributors will be acknowledged in our [CONTRIBUTORS.md](CONTRIBUTORS.md) file. Thank you for your support!
 ## Feedback
 
-For any queries and improvements please reach out to johnmoorthi85131@gmail.com
+NOTE:
+Change the ip in config.env and .env file .
+Use the ip of your machine in which you are deploying container.
 
 # Thank You
 
