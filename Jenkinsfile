@@ -71,56 +71,46 @@ BACKEND_IMAGE=${mydockerimage}:backend_${BUILD_NUMBER}
                 '''
             }
         }
-    //     stage('Deploy Production Environment') {
-    //         agent {label "deployment"}
-    //         steps {
-    //             timeout(time:5, unit:'minutes'){
-    //             input message:'Approve PRODUCTION Deployment?'
-    //             }
-    //             echo "Running app on Prod env"
-    //             sh '''
-    //             docker stop mymanualdeployapp || true
-    //             docker rm mymanualdeployapp || true
-    //             docker image rm ${mydockerimage}:${BUILD_NUMBER} || true
-    //             docker run -itd --name mymanualdeployapp -p 8083:8080 $mydockerimage:$BUILD_NUMBER
-    //             '''
-    //         }
-    //     }
-    // }
-    // post {
-    //      always { 
-    //         mail to: 'animeislove1657@gmail.com',
-    //         subject: "Job '${JOB_NAME}' (${BUILD_NUMBER}) is waiting for input",
-    //         body: "Please go to ${BUILD_URL} and verify the build"
-    //         cleanWs()
-    //     }
-    //     success {
-    //         mail bcc: 'dipakbhatt363@gmail.com', 
-    //         body: """Hi Team,
-    //         Build #$BUILD_NUMBER is successful, please go through the url
-    //         $BUILD_URL
-    //         and verify the details.
-    //         Regards,
-    //         DevOps Team""",
-    //         cc: 'bhattad625@gmail.com', 
-    //         from: 'bhattad625@gmail.com', 
-    //         replyTo: '', 
-    //         subject: 'BUILD SUCCESS NOTIFICATION', 
-    //         to: 'bhattadeependra05@gmail.com'
-    //     }
-    //     failure {
-    //         mail bcc: '', 
-    //         body: """Hi Team,
-    //         Build #$BUILD_NUMBER is unsuccessful, please go through the url
-    //         $BUILD_URL
-    //         and verify the details.
-    //         Regards,
-    //         DevOps Team""", 
-    //         cc: 'dipakbhatt363@gmail.com', 
-    //         from: 'bhattad625@gmail.com', 
-    //         replyTo: 'bhattadeependra05@gmail.com', 
-    //         subject: 'BUILD FAILED NOTIFICATION', 
-    //         to: 'bhattadeependra05@gmail.com'
-        // }
+post {
+    always { 
+        mail to: 'animeislove1657@gmail.com',
+            subject: "Job '${JOB_NAME}' (${BUILD_NUMBER}) is waiting for input",
+            body: "Please go to ${BUILD_URL} and verify the build"
+        cleanWs()
+        }
+    success {
+            mail bcc: 'dipakbhatt363@gmail.com',
+            to: 'bhattadeependra05@gmail.com',
+            cc: 'bhattad625@gmail.com',
+            from: 'bhattad625@gmail.com',
+            replyTo: '',
+            subject: 'BUILD SUCCESS NOTIFICATION',
+            body: """Hi Team,
+
+                Build #$BUILD_NUMBER is successful. Please review the build details at:
+                $BUILD_URL
+
+                Regards,  
+                DevOps Team"""
+            }
+        failure {
+            mail to: 'bhattadeependra05@gmail.com',
+            cc: 'dipakbhatt363@gmail.com',
+            bcc: '',
+            from: 'bhattad625@gmail.com',
+            replyTo: 'bhattadeependra05@gmail.com',
+            subject: 'BUILD FAILED NOTIFICATION',
+            body: """Hi Team,
+
+                Build #$BUILD_NUMBER is unsuccessful.  
+                Please go through the following URL and verify the details:  
+                $BUILD_URL
+
+                Regards,  
+                DevOps Team
+                """
+            }
+   
+        }
     }
 }
