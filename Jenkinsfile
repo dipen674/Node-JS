@@ -38,9 +38,9 @@ pipeline {
             agent {label "deployment"}
             steps {
                 script {
-            writeFile file: 'compose.env', text: """\
-            FRONTEND_IMAGE=${mydockerimage}:frontend_${BUILD_NUMBER}
-            BACKEND_IMAGE=${mydockerimage}:backend_${BUILD_NUMBER}
+            writeFile file: 'compose.env', text: """
+FRONTEND_IMAGE=${mydockerimage}:frontend_${BUILD_NUMBER}
+BACKEND_IMAGE=${mydockerimage}:backend_${BUILD_NUMBER}
             """
             sh "cat compose.env"
                 }
@@ -49,9 +49,7 @@ pipeline {
         stage('Write Frontend .env') {
             agent { label 'deployment' }
             steps {
-                writeFile file: './FrontEnd/.env', text: '''\
-                REACT_APP_API_URL=http://192.168.56.152:5000
-                '''
+                writeFile file: './FrontEnd/.env', text: '''REACT_APP_API_URL=http://192.168.56.152:5000'''
                 sh "cat ./FrontEnd/.env"
             }
 }
