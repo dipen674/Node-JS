@@ -60,57 +60,57 @@ BACKEND_IMAGE=${mydockerimage}:backend_${BUILD_NUMBER}
                 sh "cat ./FrontEnd/.env"
             }
         }
-//         stage('Deploy to devenv ') {
-//             agent {label "deployment"}
-//             steps {
-//                 echo 'Running a Development environment'
-//                 sh '''
-//                 docker compose --env-file compose.env down || true
-//                 docker compose --env-file compose.env pull
-//                 docker compose --env-file compose.env up -d
-//                 '''
-//             }
-//         }
-//     }
-//     post {
-//         always { 
-//             mail to: 'animeislove1657@gmail.com',
-//                 subject: "Job '${JOB_NAME}' (${BUILD_NUMBER}) is waiting for input",
-//                 body: "Please go to ${BUILD_URL} and verify the build"
-//             cleanWs()
-//             }
-//         success {
-//                 mail bcc: 'dipakbhatt363@gmail.com',
-//                 to: 'bhattadeependra05@gmail.com',
-//                 cc: 'bhattad625@gmail.com',
-//                 from: 'bhattad625@gmail.com',
-//                 replyTo: '',
-//                 subject: 'BUILD SUCCESS NOTIFICATION',
-//                 body: """Hi Team,
+        stage('Deploying container in devploying node ') {
+            agent {label "deployment"}
+            steps {
+                echo 'Running a Development environment'
+                sh '''
+                docker compose --env-file compose.env down || true
+                docker compose --env-file compose.env pull
+                docker compose --env-file compose.env up -d
+                '''
+            }
+        }
+    }
+    post {
+        always { 
+            mail to: 'animeislove1657@gmail.com',
+                subject: "Job '${JOB_NAME}' (${BUILD_NUMBER}) is waiting for input",
+                body: "Please go to ${BUILD_URL} and verify the build"
+            cleanWs()
+            }
+        success {
+                mail bcc: 'dipakbhatt363@gmail.com',
+                to: 'bhattadeependra05@gmail.com',
+                cc: 'bhattad625@gmail.com',
+                from: 'bhattad625@gmail.com',
+                replyTo: '',
+                subject: 'BUILD SUCCESS NOTIFICATION',
+                body: """Hi Team,
 
-//                     Build #$BUILD_NUMBER is successful. Please review the build details at:
-//                     $BUILD_URL
+                    Build #$BUILD_NUMBER is successful. Please review the build details at:
+                    $BUILD_URL
 
-//                     Regards,  
-//                     DevOps Team"""
-//                 }
-//             failure {
-//                 mail to: 'bhattadeependra05@gmail.com',
-//                 cc: 'dipakbhatt363@gmail.com',
-//                 bcc: '',
-//                 from: 'bhattad625@gmail.com',
-//                 replyTo: 'bhattadeependra05@gmail.com',
-//                 subject: 'BUILD FAILED NOTIFICATION',
-//                 body: """Hi Team,
+                    Regards,  
+                    DevOps Team"""
+                }
+            failure {
+                mail to: 'bhattadeependra05@gmail.com',
+                cc: 'dipakbhatt363@gmail.com',
+                bcc: '',
+                from: 'bhattad625@gmail.com',
+                replyTo: 'bhattadeependra05@gmail.com',
+                subject: 'BUILD FAILED NOTIFICATION',
+                body: """Hi Team,
 
-//                     Build #$BUILD_NUMBER is unsuccessful.  
-//                     Please go through the following URL and verify the details:  
-//                     $BUILD_URL
+                    Build #$BUILD_NUMBER is unsuccessful.  
+                    Please go through the following URL and verify the details:  
+                    $BUILD_URL
 
-//                     Regards,  
-//                     DevOps Team
-//                     """
-//                 }
+                    Regards,  
+                    DevOps Team
+                    """
+                }
     
     }
 }
