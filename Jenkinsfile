@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        mydockerimage = "harbor.registry.local/jenkins/"
+        mydockerimage = "harbor.registry.local/jenkins/mylocalimage"
     }
 
     stages {
