@@ -33,7 +33,7 @@ pipeline {
             agent {label "production"}
             steps {
                 echo "pushing image to docker hub registry"
-                withDockerRegistry ([credentialsId: 'Harborregistrycredentials', url: 'harbor.registry.local']) {
+                withDockerRegistry ([credentialsId: 'Harborregistrycredentials', url: 'https://harbor.registry.local']) {
                     sh '''
                     docker push ${mydockerimage}:frontend_${BUILD_NUMBER}
                     docker push ${mydockerimage}:backend_${BUILD_NUMBER}
