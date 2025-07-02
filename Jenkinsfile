@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        mydockerimage = "deependrabhatta/node_js"
+        mydockerimage = "harbor.registry.local/jenkins/"
     }
 
     stages {
@@ -17,8 +17,8 @@ pipeline {
             agent {label "production"}
             steps {
                 echo "Building docker images'"
-                sh "docker image build --no-cache -t ${mydockerimage}:frontend_${BUILD_NUMBER} ./FrontEnd"
-                sh "docker image build --no-cache -t ${mydockerimage}:backend_${BUILD_NUMBER} ./BackEnd"
+                sh "docker image build -t ${mydockerimage}:frontend_${BUILD_NUMBER} ./FrontEnd"
+                sh "docker image build -t ${mydockerimage}:backend_${BUILD_NUMBER} ./BackEnd"
             }
         }
          stage('Image scanning with trivy') {
@@ -29,11 +29,11 @@ pipeline {
                 sh "trivy image ${mydockerimage}:backend_${BUILD_NUMBER} > trivy_backend_report.txt"
         }
         }
-         stage('Pushing docker image to dockerhub') {
+         stage('Pushing docker image to harbor registry') {
             agent {label "production"}
             steps {
                 echo "pushing image to docker hub registry"
-                withDockerRegistry ([credentialsId: 'jenkinsdockercred', url: '']) {
+                withDockerRegistry ([credentialsId: 'Harborregistrycredentials', url: 'harbor.registry.local']) {
                     sh '''
                     docker push ${mydockerimage}:frontend_${BUILD_NUMBER}
                     docker push ${mydockerimage}:backend_${BUILD_NUMBER}
@@ -41,76 +41,76 @@ pipeline {
                 }
             }
         }
-        stage('Preparing compose.env file for docker-compose.yaml ') {
-            agent {label "deployment"}
-            steps {
-                script {
-            writeFile file: 'compose.env', text: """
-FRONTEND_IMAGE=${mydockerimage}:frontend_${BUILD_NUMBER}
-BACKEND_IMAGE=${mydockerimage}:backend_${BUILD_NUMBER}
-            """
-            sh "cat compose.env"
-                }
-            }
-        }
-        stage('Write Frontend .env') {
-            agent { label 'deployment' }
-            steps {
-                writeFile file: './FrontEnd/.env', text: "REACT_APP_API_URL=http://192.168.56.152:5000"
-                sh "cat ./FrontEnd/.env"
-            }
-        }
-        stage('Deploy to devenv ') {
-            agent {label "deployment"}
-            steps {
-                echo 'Running a Development environment'
-                sh '''
-                docker compose --env-file compose.env down || true
-                docker compose --env-file compose.env pull
-                docker compose --env-file compose.env up -d
-                '''
-            }
-        }
-    }
-    post {
-        always { 
-            mail to: 'animeislove1657@gmail.com',
-                subject: "Job '${JOB_NAME}' (${BUILD_NUMBER}) is waiting for input",
-                body: "Please go to ${BUILD_URL} and verify the build"
-            cleanWs()
-            }
-        success {
-                mail bcc: 'dipakbhatt363@gmail.com',
-                to: 'bhattadeependra05@gmail.com',
-                cc: 'bhattad625@gmail.com',
-                from: 'bhattad625@gmail.com',
-                replyTo: '',
-                subject: 'BUILD SUCCESS NOTIFICATION',
-                body: """Hi Team,
+//         stage('Preparing compose.env file for docker-compose.yaml ') {
+//             agent {label "deployment"}
+//             steps {
+//                 script {
+//             writeFile file: 'compose.env', text: """
+// FRONTEND_IMAGE=${mydockerimage}:frontend_${BUILD_NUMBER}
+// BACKEND_IMAGE=${mydockerimage}:backend_${BUILD_NUMBER}
+//             """
+//             sh "cat compose.env"
+//                 }
+//             }
+//         }
+//         stage('Write Frontend .env') {
+//             agent { label 'deployment' }
+//             steps {
+//                 writeFile file: './FrontEnd/.env', text: "REACT_APP_API_URL=http://192.168.56.152:5000"
+//                 sh "cat ./FrontEnd/.env"
+//             }
+//         }
+//         stage('Deploy to devenv ') {
+//             agent {label "deployment"}
+//             steps {
+//                 echo 'Running a Development environment'
+//                 sh '''
+//                 docker compose --env-file compose.env down || true
+//                 docker compose --env-file compose.env pull
+//                 docker compose --env-file compose.env up -d
+//                 '''
+//             }
+//         }
+//     }
+//     post {
+//         always { 
+//             mail to: 'animeislove1657@gmail.com',
+//                 subject: "Job '${JOB_NAME}' (${BUILD_NUMBER}) is waiting for input",
+//                 body: "Please go to ${BUILD_URL} and verify the build"
+//             cleanWs()
+//             }
+//         success {
+//                 mail bcc: 'dipakbhatt363@gmail.com',
+//                 to: 'bhattadeependra05@gmail.com',
+//                 cc: 'bhattad625@gmail.com',
+//                 from: 'bhattad625@gmail.com',
+//                 replyTo: '',
+//                 subject: 'BUILD SUCCESS NOTIFICATION',
+//                 body: """Hi Team,
 
-                    Build #$BUILD_NUMBER is successful. Please review the build details at:
-                    $BUILD_URL
+//                     Build #$BUILD_NUMBER is successful. Please review the build details at:
+//                     $BUILD_URL
 
-                    Regards,  
-                    DevOps Team"""
-                }
-            failure {
-                mail to: 'bhattadeependra05@gmail.com',
-                cc: 'dipakbhatt363@gmail.com',
-                bcc: '',
-                from: 'bhattad625@gmail.com',
-                replyTo: 'bhattadeependra05@gmail.com',
-                subject: 'BUILD FAILED NOTIFICATION',
-                body: """Hi Team,
+//                     Regards,  
+//                     DevOps Team"""
+//                 }
+//             failure {
+//                 mail to: 'bhattadeependra05@gmail.com',
+//                 cc: 'dipakbhatt363@gmail.com',
+//                 bcc: '',
+//                 from: 'bhattad625@gmail.com',
+//                 replyTo: 'bhattadeependra05@gmail.com',
+//                 subject: 'BUILD FAILED NOTIFICATION',
+//                 body: """Hi Team,
 
-                    Build #$BUILD_NUMBER is unsuccessful.  
-                    Please go through the following URL and verify the details:  
-                    $BUILD_URL
+//                     Build #$BUILD_NUMBER is unsuccessful.  
+//                     Please go through the following URL and verify the details:  
+//                     $BUILD_URL
 
-                    Regards,  
-                    DevOps Team
-                    """
-                }
+//                     Regards,  
+//                     DevOps Team
+//                     """
+//                 }
     
     }
 }
