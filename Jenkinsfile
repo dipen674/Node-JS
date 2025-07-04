@@ -1,5 +1,5 @@
 pipeline {
-    // agent any
+    agent none
 
     environment {
         mydockerimage = "deependrabhatta/node_js"
