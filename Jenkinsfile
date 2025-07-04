@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    // agent any
 
     environment {
         mydockerimage = "deependrabhatta/node_js"
@@ -17,8 +17,8 @@ pipeline {
             agent {label "production"}
             steps {
                 echo "Building docker images'"
-                sh "docker image build --no-cache -t ${mydockerimage}:frontend_${BUILD_NUMBER} ./FrontEnd"
-                sh "docker image build --no-cache -t ${mydockerimage}:backend_${BUILD_NUMBER} ./BackEnd"
+                sh "docker image build -t ${mydockerimage}:frontend_${BUILD_NUMBER} ./FrontEnd"
+                sh "docker image build -t ${mydockerimage}:backend_${BUILD_NUMBER} ./BackEnd"
             }
         }
          stage('Image scanning with trivy') {
