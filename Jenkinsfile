@@ -53,12 +53,12 @@ BACKEND_IMAGE=${mydockerimage}:backend_${BUILD_NUMBER}
                 }
             }
         }
-        stage('Write Frontend .env') {
-            agent { label 'deployment' }
-            steps {
-                writeFile file: './FrontEnd/.env', text: "REACT_APP_API_URL=http://192.168.56.152:5000"
-                sh "cat ./FrontEnd/.env"
-            }
+        // stage('Write Frontend .env') {
+        //     agent { label 'deployment' }
+        //     steps {
+        //         writeFile file: './FrontEnd/.env', text: "REACT_APP_API_URL=http://192.168.56.152:5000"
+        //         sh "cat ./FrontEnd/.env"
+        //     }
         }
         stage('Deploying container in devploying node ') {
             agent {label "deployment"}
