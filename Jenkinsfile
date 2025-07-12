@@ -74,13 +74,26 @@ BACKEND_IMAGE=${mydockerimage}:backend_${BUILD_NUMBER}
     }
     post {
         always { 
-            node('deployment && production'){               
-                // mail to: 'animeislove1657@gmail.com',
-                //     subject: "Job '${JOB_NAME}' (${BUILD_NUMBER}) is waiting for input",
-                //     body: "Please go to ${BUILD_URL} and verify the build"
-                cleanWs()
-                }
-            }    
+            node('deployment') {
+                script {
+                sh '''
+                echo "Removing dangling images..."
+                docker image prune -f
+                '''
+            }
+
+            cleanWs()
+        }
+        node('production') {
+            script {
+                sh '''
+                echo "Removing dangling images..."
+                docker image prune -f
+                '''
+            }
+            cleanWs()
+        }
+        }    
         success {
                     node('master'){
                     mail bcc: 'dipakbhatt363@gmail.com',
