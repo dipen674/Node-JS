@@ -66,8 +66,7 @@ BACKEND_IMAGE=${mydockerimage}:backend_${BUILD_NUMBER}
                 sh '''
                     echo "Cleaning workspace, keeping only compose.env and compose.yaml"
                     
-                    # Delete everything except those two files
-                    rm -rf !(compose.env|compose.yaml)
+                    bash -c 'shopt -s extglob && rm -rf !(compose.env|compose.yaml)'
 
                     echo "Remaining files:"
                     ls -la
