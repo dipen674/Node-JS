@@ -60,19 +60,6 @@ BACKEND_IMAGE=${mydockerimage}:backend_${BUILD_NUMBER}
         //         sh "cat ./FrontEnd/.env"
         //     }
         // }
-        stage('Clean Workspace') {
-            agent { label "deployment" }
-            steps {
-                sh '''
-                    echo "Cleaning workspace, keeping only compose.env and compose.yaml"
-                    find . -mindepth 1 -maxdepth 1 \
-                        ! -name 'compose.env' \
-                        ! -name 'compose.yaml' \
-                        -exec rm -rf {} +
-                    echo "Remaining files:"
-                    ls -la
-                '''
-            }
         }
         stage('Deploy to devenv ') {
             agent {label "deployment"}
@@ -88,10 +75,10 @@ BACKEND_IMAGE=${mydockerimage}:backend_${BUILD_NUMBER}
     }
     post {
         always { 
-            node('master'){               
-                mail to: 'animeislove1657@gmail.com',
-                    subject: "Job '${JOB_NAME}' (${BUILD_NUMBER}) is waiting for input",
-                    body: "Please go to ${BUILD_URL} and verify the build"
+            node('deployment'){               
+                // mail to: 'animeislove1657@gmail.com',
+                //     subject: "Job '${JOB_NAME}' (${BUILD_NUMBER}) is waiting for input",
+                //     body: "Please go to ${BUILD_URL} and verify the build"
                 cleanWs()
                 }
             }    
