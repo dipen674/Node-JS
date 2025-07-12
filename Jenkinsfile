@@ -78,7 +78,7 @@ BACKEND_IMAGE=${mydockerimage}:backend_${BUILD_NUMBER}
                 script {
                 sh '''
                 echo "Removing dangling images..."
-                docker image prune -f
+                docker image prune -a -f
                 '''
             }
 
@@ -88,7 +88,7 @@ BACKEND_IMAGE=${mydockerimage}:backend_${BUILD_NUMBER}
             script {
                 sh '''
                 echo "Removing dangling images..."
-                docker image prune -f
+                docker image prune -a -f
                 '''
             }
             cleanWs()
