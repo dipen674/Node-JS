@@ -3,8 +3,8 @@ services:
     image: "${FRONTEND_IMAGE}"
     ports:
       - "3000:80"
-    env_file:
-      - ./FrontEnd/.env
+    # env_file:
+    #   - ./FrontEnd/.env
     networks:
       - mynetwork
 
@@ -12,8 +12,8 @@ services:
     image: "${BACKEND_IMAGE}"  
     depends_on:
       - mongodb
-    env_file:
-      - ./BackEnd/config.env
+    # env_file:
+    #   - ./BackEnd/config.env
     ports:
       - "5000:5000"
     networks:

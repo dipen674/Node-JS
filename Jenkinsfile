@@ -60,6 +60,23 @@ BACKEND_IMAGE=${mydockerimage}:backend_${BUILD_NUMBER}
         //         sh "cat ./FrontEnd/.env"
         //     }
         // }
+        stage('Clean Workspace') {
+            agent {label "deployment"}
+            steps {
+                sh '''
+                    echo "Cleaning workspace, keeping only compose.env and compose.yaml"
+                    
+                    # Enable extended globbing
+                    shopt -s extglob
+                    
+                    # Delete everything except those two files
+                    rm -rf !(compose.env|compose.yaml)
+
+                    echo "Remaining files:"
+                    ls -la
+                '''
+            }
+        }
         stage('Deploy to devenv ') {
             agent {label "deployment"}
             steps {
