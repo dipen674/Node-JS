@@ -60,7 +60,6 @@ BACKEND_IMAGE=${mydockerimage}:backend_${BUILD_NUMBER}
         //         sh "cat ./FrontEnd/.env"
         //     }
         // }
-        }
         stage('Deploy to devenv ') {
             agent {label "deployment"}
             steps {
