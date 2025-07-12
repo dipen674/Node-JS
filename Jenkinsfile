@@ -61,13 +61,14 @@ BACKEND_IMAGE=${mydockerimage}:backend_${BUILD_NUMBER}
         //     }
         // }
         stage('Clean Workspace') {
-            agent {label "deployment"}
+            agent { label "deployment" }
             steps {
                 sh '''
                     echo "Cleaning workspace, keeping only compose.env and compose.yaml"
-                    
-                    bash -c 'shopt -s extglob && rm -rf !(compose.env|compose.yaml)'
-
+                    find . -mindepth 1 -maxdepth 1 \
+                        ! -name 'compose.env' \
+                        ! -name 'compose.yaml' \
+                        -exec rm -rf {} +
                     echo "Remaining files:"
                     ls -la
                 '''
