@@ -16,7 +16,7 @@ pipeline {
          stage('Build docker image') {
             agent {label "production"}
             steps {
-                echo "Building docker images'"
+                echo "Building docker images"
                 sh "docker image build -t ${mydockerimage}:frontend_${BUILD_NUMBER} ./FrontEnd"
                 sh "docker image build -t ${mydockerimage}:backend_${BUILD_NUMBER} ./BackEnd"
             }
@@ -60,7 +60,7 @@ BACKEND_IMAGE=${mydockerimage}:backend_${BUILD_NUMBER}
         //         sh "cat ./FrontEnd/.env"
         //     }
         // }
-        stage('Deploying container in devploying node ') {
+        stage('Deploying container in deploying node ') {
             agent {label "deployment"}
             steps {
                 echo 'Running a Development environment'
@@ -73,28 +73,27 @@ BACKEND_IMAGE=${mydockerimage}:backend_${BUILD_NUMBER}
         }
     }
     post {
-        always { 
-            always { 
+            always {
             node('deployment') {
                 script {
-                sh '''
-                echo "Removing dangling images..."
-                docker image prune -a -f
-                '''
+                    sh '''
+                    echo "Removing dangling images..."
+                    docker image prune -a -f
+                    '''
+                }
+                cleanWs()
             }
+            node('production') {
+                script {
+                    sh '''
+                    echo "Removing dangling images..."
+                    docker image prune -a -f
+                    '''
+                }
+                cleanWs()
+            }
+        }
 
-            cleanWs()
-        }
-        node('production') {
-            script {
-                sh '''
-                echo "Removing dangling images..."
-                docker image prune -a -f
-                '''
-            }
-            cleanWs()
-        }
-            }    
         success {
                     node('master'){
                     mail bcc: 'dipakbhatt363@gmail.com',
@@ -130,7 +129,6 @@ BACKEND_IMAGE=${mydockerimage}:backend_${BUILD_NUMBER}
                     DevOps Team
                     """
                 }
-            }    
-    
+            }       
     }
 }
