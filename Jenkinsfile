@@ -74,7 +74,7 @@ BACKEND_IMAGE=${mydockerimage}:backend_${BUILD_NUMBER}
     }
     post {
         always { 
-            node('deployment'){               
+            node('deployment && production'){               
                 // mail to: 'animeislove1657@gmail.com',
                 //     subject: "Job '${JOB_NAME}' (${BUILD_NUMBER}) is waiting for input",
                 //     body: "Please go to ${BUILD_URL} and verify the build"
