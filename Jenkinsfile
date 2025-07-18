@@ -81,7 +81,7 @@ BACKEND_IMAGE=${mydockerimage}:backend_${BUILD_NUMBER}
                     docker image prune -a -f
                     '''
                 }
-                cleanWs()
+                // cleanWs()
             }
             node('production') {
                 script {
